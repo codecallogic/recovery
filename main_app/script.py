@@ -6,20 +6,20 @@ api = infermedica_api.get_api()
 
 # conditions = api.conditions_list()
 
-print(api.condition_details('c_33'), end="\n\n")
+# print(api.condition_details('c_33'), end="\n\n")
 
 
-# request = infermedica_api.Diagnosis(sex='female', age=35)
+request = infermedica_api.Diagnosis(sex='female', age=35)
 
-# request.add_symptom('s_88', 'present', initial=True)
-# request.add_symptom('s_105', 'present', initial=True)
-# request.add_symptom('s_98', 'present', initial=True)
-# request.add_symptom('s_100', 'present', initial=True)
+request.add_symptom('s_88', 'present', initial=True)
+request.add_symptom('s_105', 'present', initial=True)
+request.add_symptom('s_98', 'present', initial=True)
+request.add_symptom('s_100', 'present', initial=True)
 
 # # call diagnosis
-# request = api.diagnosis(request)
+request = api.diagnosis(request)
 
-# print(request)
+print(request)
 
 # print(conditions[0])
 # print(api.symptom_details('s_13'), end="\n\n")
