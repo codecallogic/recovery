@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+    <form action="{% url 'lookup' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <div class="input-group">
+            {{ form.query }}
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-dark">Add</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="container">
+        <div class="row">
+        {% for search in search %}
+            
+                <div class="col-12">
+                <form action="{% url 'patients_symptoms' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="s_id" value="{{ search.id }}">
+                    <input type="hidden" name="label" value="{{ search.label }}">
+                    <button type="submit" class="btn btn-dark">{{ search.label }}</button>
+                </form>
+                </div>
+
+        {% endfor %}
+        </div>
+    </div>  
+    <div class="container">
+        <div class="row">
+        {% for symptom in symptoms %}
+            <div class="col-12">
+                <button class="btn btn-primary mt-3">{{ symptom.label }}</button>
+            </div>
+        {% endfor %}
+        {% if symptoms %}
+            <a href="{% url 'patients_assessment'  %}" class="btn btn-light mt-3">Continue</a>
+        {% else %}
+            <p>I have no symptoms</p>
+            <a href="{% url 'patients_assessment'  %}" class="btn btn-light mt-3">Continue</a>
+        {% endif %}
+        </div>
+    </div> 
+{% endblock %}

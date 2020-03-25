@@ -20,7 +20,6 @@
         <div class="container">
             <a class="navbar-brand" href="#">Navbar</a>
             <ul class="navbar-nav">
-                <li><a href="{% url 'about'  %}">About</a></li>
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'home'  %}">Home</a></li>
                 <li><a href="{% url 'logout' %}">Log Out</a></li>

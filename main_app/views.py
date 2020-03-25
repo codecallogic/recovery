@@ -4,22 +4,25 @@ from django.urls import reverse
 from django.views.generic.edit import CreateView
 from django.views.generic import TemplateView
 from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
-from .forms import SearchForm, SymptomsForm
-from .models import Search, Symptoms
+from .forms import SearchForm, SymptomsForm, PatientForm
+from .models import Search, Symptoms, Patient
 import infermedica_api
 
 infermedica_api.configure(app_id='dd7d8ffc', app_key='805d0529637017534b6b5726f942c5b9')
 
 class SearchView(TemplateView):
-    template_name = 'patients/create_patients.html'
+    template_name = 'patients/lookup.html'
 
     def get(self, request):
-        form = SearchForm()
-        return render(request, self.template_name, {'form': form})
+        symptoms        = Symptoms.objects.filter(user_id = request.user)
+        form            = SearchForm()
+        return render(request, self.template_name, {'form': form, 'symptoms': symptoms})
         
     def post(self, request):
-        form = SearchForm(request.POST or None)
+        symptoms        = Symptoms.objects.filter(user_id = request.user)
+        form            = SearchForm(request.POST or None)
         if form.is_valid():
             new_search          = form.save(commit=False)
             new_search.user_id  = request.user.id
@@ -30,15 +33,40 @@ class SearchView(TemplateView):
         else:
             print('false')
         
-        context = {'form': form, 'query': query, 'search': search}
+        context = {'form': form, 'query': query, 'search': search, 'symptoms': symptoms}
         return render(request, self.template_name , context)
 
-class PatientSymptoms(TemplateView):
-    template_name = 'patients/create_patients.html'
+class PatientInfo(LoginRequiredMixin, TemplateView):
+    template_name = 'patients/index.html'
 
     def get(self, request):
+        if Patient.objects.filter(user_id = request.user).exists():
+            return redirect('lookup')
+        else:
+            form = PatientForm()
+            return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = PatientForm(request.POST or None)
+        if form.is_valid():
+            new_patient             = form.save(commit=False)
+            print(request.user)
+            new_patient.user_id     = request.user.id
+            new_patient.save()
+        else:
+            print('false')
+        
+        context = {'form': form}
+        return redirect('lookup')   
+        
+
+class PatientSymptoms(TemplateView):
+    template_name = 'patients/lookup.html'
+
+    def get(self, request):
+        symptoms        = Symptoms.objects.filter(user_id = request.user)
         form = SearchForm()
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form': form, 'symptoms': symptoms})
 
     def post(self, request):
         symptoms        = Symptoms.objects.filter(user_id = request.user)
@@ -55,14 +83,26 @@ class PatientSymptoms(TemplateView):
         context = {'form': form, 'symptoms': symptoms}
         return render(request, self.template_name, context)
 
+class PatientAssessment(TemplateView):
+    template_name = 'patients/assessment.html'
+
+    def get(self, request):
+        symptoms        = Symptoms.objects.filter(user_id = request.user)
+        form            = SearchForm()
+        return render(request, self.template_name, {'form': form, 'symptoms': symptoms})
+
+    def post(self, request):
+        if request.POST:
+            print('Hello')
+            
+        symptoms        = Symptoms.objects.filter(user_id = request.user)
+        
+        for s in symptoms:
+            print(s)
+        
+
 def home(request):
-    return HttpResponse('Hello')
-
-def about(request):
-    return render(request, 'about.html')
-
-def patients_index(request):
-    return render(request, 'patients/index.html')
+    return render(request, 'index.html')
 
 def signup(request):
     error_message = ''
@@ -71,14 +111,10 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('patients_index')
+            return redirect('patients')
         else:
             error_message = 'Invalid sign up - try again'
     form = UserCreationForm()
     context = {'form': form, 'error_message': error_message}
     return render(request, 'registration/signup.html', context)
-    
-    
 
-
-# Create your views here.
