@@ -1,16 +1,53 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import TemplateView
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
-from .forms import SearchForm, SymptomsForm, PatientForm
-from .models import Search, Symptoms, Patient
-import infermedica_api
+from django.forms.models import model_to_dict
+from .forms import SearchForm, SymptomsForm, PatientForm, RecordForm
+from .models import Search, Symptoms, Patient, Tracker
+# import infermedica_api
 
 # infermedica_api.configure(app_id='dd7d8ffc', app_key='805d0529637017534b6b5726f942c5b9')
+
+class TrackerCreate(LoginRequiredMixin, CreateView):
+  model = Tracker
+  fields = '__all__'
+  success_url = '/trackers/'
+
+class TrackerUpdate(LoginRequiredMixin, UpdateView):
+  model = Tracker
+  fields = '__all__'
+
+class TrackerDelete(LoginRequiredMixin, DeleteView):
+  model = Tracker
+  success_url = '/trackers/'
+
+# def trackers_index(request):
+#   trackers = Tracker.objects.all()
+#   return render(request, 'trackers/index.html', { 'trackers': trackers })
+
+def trackers_detail(request, tracker_id):
+    tracker = Tracker.objects.get(id=tracker_id)
+    record_form = RecordForm()
+    arr = [tracker.label1, tracker.label2, tracker.label3]
+    form_list = zip(record_form, arr)
+    print(type(form_list))
+    return render(request, 'trackers/detail.html', {
+         'tracker': tracker, 'record_form': record_form, 'arr': arr, 'form_list': form_list,
+         })
+
+def add_record(request, tracker_id):
+    form = RecordForm(request.POST)
+    if form.is_valid():
+        new_record = form.save(commit=False)
+        new_record.tracker_id = tracker_id
+        new_record.save()
+    return redirect('detail', tracker_id=tracker_id)
 
 class SearchView(TemplateView):
     template_name = 'patients/lookup.html'
@@ -50,7 +87,6 @@ class PatientInfo(LoginRequiredMixin, TemplateView):
         form = PatientForm(request.POST or None)
         if form.is_valid():
             new_patient             = form.save(commit=False)
-            print(request.user)
             new_patient.user_id     = request.user.id
             new_patient.save()
         else:
@@ -84,22 +120,27 @@ class PatientSymptoms(TemplateView):
         return render(request, self.template_name, context)
 
 class PatientAssessment(TemplateView):
-    template_name = 'patients/assessment.html'
+    template_name = 'trackers/index.html'
 
     def get(self, request):
         symptoms        = Symptoms.objects.filter(user_id = request.user)
+        trackers        = Tracker.objects.all()
         form            = SearchForm()
-        return render(request, self.template_name, {'form': form, 'symptoms': symptoms})
+        return render(request, self.template_name, {'form': form, 'symptoms': symptoms, 'trackers': trackers})
 
-    def post(self, request):
-        if request.POST:
-            print('Hello')
-            
+    def post(self, request): 
         symptoms        = Symptoms.objects.filter(user_id = request.user)
-        
+        arr             = []
+        conditions      = []
+        # api             = infermedica_api.get_api()
+        # request         = infermedica_api.Diagnosis(sex='female', age=35)
+        # request.add_symptom('{s.s_id}', 'present', initial=True)
+        # request         = api.diagnosis(request)
+        print(request)
         for s in symptoms:
-            print(s)
-        
+            arr.append(s.s_id)
+        context = {'arr': arr, 'symptoms': symptoms}
+        return render(request, self.template_name, context)       
 
 def home(request):
     return render(request, 'index.html')

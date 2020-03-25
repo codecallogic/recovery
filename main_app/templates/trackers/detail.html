@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ tracker.tracker_name }}</h1>
+
+<div class="row">
+<div class="col s6">
+  <form action="{% url 'add_record' tracker.id %}" method="post">
+    {% csrf_token %}
+    
+    {% for field, label in form_list %}
+    <div class="fieldWrapper">
+        {{ field.errors }}
+        {{ label }}{{ field }}
+        {% if field.help_text %}
+        <p class="help">{{ field.help_text|safe }}</p>
+        {% endif %}
+    </div>
+      {% endfor %}
+
+    <input type="submit" class="btn" value="Add">
+  </form>
+  <table class="striped">
+    <thead>
+      <tr><th>timestamp</th><th>{{ tracker.label1 }}</th><th>{{ tracker.label2 }}</th><th>{{ tracker.label3 }}</th></tr>
+    </thead>
+    <tbody>
+      {% for record in tracker.record_set.all %}
+        <tr>
+          <td>{{record.timestamp}}</td>
+          <td>{{record.input1}}</td>
+          <td>{{record.input2}}</td>
+          <td>{{record.input3}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+</div>
+{% endblock %}

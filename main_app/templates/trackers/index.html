@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Diagnosis</h1>
+
+<div class="container">
+  <div class="row">
+      <div class="col-6">
+          {% for symptom in symptoms %}
+          <div class="col-12">
+              <button class="btn btn-primary mt-3">{{ symptom.label }}</button>
+          </div>
+          {% endfor %}
+          <form action="{% url 'patients_assessment'  %}" method="post">
+              {% csrf_token %}
+              <input type="submit" value="Diagnosis" class="btn btn-light">
+          </form>
+      </div>
+  </div>
+</div>
+
+<h1>Trackers</h1>
+
+{% for tracker in trackers %}
+  <div class="card">
+    <a href="{% url 'detail' tracker.id %}">
+    <div class="card-content">
+      <span class="card-title">{{ tracker.tracker_name }}</span>
+      <div class="card-action">
+        <a href="{% url 'trackers_update' tracker.id %}">Edit</a>
+        <a href="{% url 'trackers_delete' tracker.id %}">Delete</a>
+      </div>
+    </div>
+    </a>
+  </div>
+{% endfor %}
+
+{% endblock %}
