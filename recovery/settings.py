@@ -124,5 +124,5 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-LOGIN_REDIRECT_URL = '/patients/create/'
-LOGOUT_REDIRECT_URL = '/patients/create/'
+LOGIN_REDIRECT_URL = '/patients/lookup/'
+LOGOUT_REDIRECT_URL = '/'
