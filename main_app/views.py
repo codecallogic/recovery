@@ -10,7 +10,7 @@ from .forms import SearchForm, SymptomsForm, PatientForm
 from .models import Search, Symptoms, Patient
 import infermedica_api
 
-infermedica_api.configure(app_id='dd7d8ffc', app_key='805d0529637017534b6b5726f942c5b9')
+# infermedica_api.configure(app_id='dd7d8ffc', app_key='805d0529637017534b6b5726f942c5b9')
 
 class SearchView(TemplateView):
     template_name = 'patients/lookup.html'
