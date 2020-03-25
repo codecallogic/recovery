@@ -22,6 +22,8 @@
             <ul class="navbar-nav">
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'home'  %}">Home</a></li>
+                <li><a href="{% url 'trackers_create' %}">Add Tracker</a></li>
+                <li><a href="{% url 'patients_assessment' %}">View Trackers</a></li>
                 <li><a href="{% url 'logout' %}">Log Out</a></li>
                 {% else %}
                 <li><a href="{% url 'signup' %}">Sign Up</a></li>

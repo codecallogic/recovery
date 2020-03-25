@@ -1,6 +1,30 @@
 from django.db import models
 from django.contrib.auth.models import User
-from itertools import chain
+
+class Tracker(models.Model):
+    tracker_name    = models.CharField(max_length=100)
+    label1          = models.CharField(max_length=100)
+    label2          = models.CharField(max_length=100)
+    label3          = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.tracker_name
+    
+    def get_absolute_url(self):
+        return reverse('detail', kwargs={'tracker_id': self.id})
+
+class Record(models.Model):
+    input1          = models.IntegerField()
+    input2          = models.IntegerField()
+    input3          = models.IntegerField()
+    timestamp       = models.TimeField(auto_now_add=True)
+    tracker         = models.ForeignKey(Tracker, on_delete=models.CASCADE)
+
+    def __int__(self):
+        return self.input1, self.input2, self.input3
+
+    class Meta:
+        ordering = ['-timestamp']
 
 class Search(models.Model):
     query       = models.CharField(max_length=100)
@@ -13,15 +37,6 @@ class Symptoms(models.Model):
     s_id        = models.CharField(max_length=100)
     label       = models.CharField(max_length=100)
     user        = models.ForeignKey(User, on_delete=models.CASCADE)   
-
-    def to_dict(self):
-        opts = self._meta
-        data = {}
-        for f in chain(opts.concrete_fields, opts.private_fields):
-            data[f.name] = f.value_from_object(self)
-        for f in opts.many_to_many:
-            data[f.name] = [i.id for i in f.value_from_object(self)]
-        return data
 
     class Meta:
         unique_together = ('s_id', 'label')    

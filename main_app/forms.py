@@ -1,5 +1,11 @@
+from django.forms import ModelForm
 from django import forms
-from .models import Search, Symptoms, Patient
+from .models import Search, Symptoms, Patient, Record
+
+class RecordForm(ModelForm):
+  class Meta:
+    model = Record
+    fields = ['input1', 'input2', 'input3']
 
 class SearchForm(forms.ModelForm):
     query       = forms.CharField(widget=forms.TextInput(
