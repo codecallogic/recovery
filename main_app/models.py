@@ -48,13 +48,13 @@ class Patient(models.Model):
     firstname   = models.CharField(max_length=100)
     lastname    = models.CharField(max_length=100)
     age         = models.IntegerField()
-    gender      = models.CharField(max_length=100)
+    sex         = models.CharField(max_length=100)
     user        = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('firstname', 'lastname', 'age', 'gender')   
+        unique_together = ('firstname', 'lastname', 'age', 'sex')   
 
     def __str__(self):
-        return f"Patient {self.firstname} {self.lastname} of age {self.age}, gender {self.gender} is submitted a form "
+        return f"Patient {self.firstname} {self.lastname} of age {self.age}, gender {self.sex} is submitted a form "
 
     

@@ -53,7 +53,7 @@ body{
 
 .sidenav {
     height: 100%;
-    background-color: #000;
+    background-color: #1A2431;
     overflow-x: hidden;
     padding-top: 20px;
 }
@@ -145,7 +145,7 @@ body{
 .register-left img{
     margin-top: 15%;
     margin-bottom: 5%;
-    width: 25%;
+    width: 80%;
     -webkit-animation: mover 2s infinite  alternate;
     animation: mover 1s infinite  alternate;
 }
@@ -310,3 +310,7 @@ li:nth-child(2n) {
     color: #ff173c; }
 .single li:last-child a {
     border-bottom: 0; }
+
+.alert {
+    margin-bottom: 100px!important;
+}
