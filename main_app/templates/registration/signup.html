@@ -1,14 +1,25 @@
-{% extends 'base.html' %}
+{% extends 'signup.html' %}
 {% block content %}
+{% load crispy_forms_tags %}
 
-<h1>Sign Up</h1>
-
-<p class="red-text">{{ error_message }}</p>
-
-<form method="post" action="{% url 'signup' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" class="btn" value="Sign up">
-</form>
+<div class="page-wrapper bg-red p-t-180 p-b-100 font-robo">
+    <div class="wrapper wrapper--w960">
+        <div class="card card-2">
+            <div class="card-heading">
+            </div>
+            <div class="card-body">
+                <h2 class="title">Registration Info</h2>
+                <form method="POST">
+                    <p class="red-text">{{ error_message }}</p>
+                    <form method="post" action="{% url 'signup' %}">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <input type="submit" class="btn btn-dark" value="Sign up">
+                    </form>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
