@@ -11,7 +11,7 @@
   <div class="col-md-6 col-sm-12">
      <div class="login-form">
       <form method="post" action="{% url 'login' %}">
-        {% csrf_token %}
+        {% csrf_token %}  
         {{ form|crispy }}
         <input type="submit" class="form-control btn btn.light" value="login">
         <input type="hidden" name="next" value="{{ next }}">

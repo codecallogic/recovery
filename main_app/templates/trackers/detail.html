@@ -1,39 +1,148 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>{{ tracker.tracker_name }}</h1>
-
 <div class="row">
-<div class="col s6">
-  <form action="{% url 'add_record' tracker.id %}" method="post">
-    {% csrf_token %}
-    
-    {% for field, label in form_list %}
-    <div class="fieldWrapper">
+  <div class="col s6" id="cols6">
+    <form action="{% url 'add_record' tracker.id %}" method="post">
+      {% csrf_token %}
+      {% for field, label in form_list %}
+      <div class="fieldWrapper">
         {{ field.errors }}
         {{ label }}{{ field }}
         {% if field.help_text %}
         <p class="help">{{ field.help_text|safe }}</p>
         {% endif %}
-    </div>
+      </div>
       {% endfor %}
-
-    <input type="submit" class="btn" value="Add">
-  </form>
+      <input type="submit" class="btn" value="Add">
+    </form>
+    <h6>{{ tracker.label1 }} Average: </h6>
+    <p id="i1avg"></p><br>
+    <h6>{{ tracker.label2 }} Average: </h6>
+    <p id="i2avg"></p><br>
+    <h6>{{ tracker.label3 }} Average: </h6>
+    <p id="i3avg"></p><br>
   <table class="striped">
     <thead>
-      <tr><th>timestamp</th><th>{{ tracker.label1 }}</th><th>{{ tracker.label2 }}</th><th>{{ tracker.label3 }}</th></tr>
+      <tr><th>Date</th><th>Timestamp</th><th id="label1">{{ tracker.label1 }}</th><th id="label2">{{ tracker.label2 }}</th><th id="label3">{{ tracker.label3 }}</th></tr>
     </thead>
     <tbody>
       {% for record in tracker.record_set.all %}
         <tr>
+          <td>{{record.datestamp}}</td>
           <td>{{record.timestamp}}</td>
-          <td>{{record.input1}}</td>
-          <td>{{record.input2}}</td>
-          <td>{{record.input3}}</td>
+          <td class="record-input">{{record.input1}}</td>
+          <td class="record-input-two">{{record.input2}}</td>
+          <td class="record-input-three">{{record.input3}}</td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
 </div>
+<canvas id="chart1" width="100" height="100"></canvas>
+<script>
+  let label = document.getElementById("label1").innerHTML
+  let labelTwo = document.getElementById("label2").innerHTML
+  let labelThree = document.getElementById("label3").innerHTML
+  let ctx = document.getElementById("chart1");
+  let inputs = document.getElementsByClassName("record-input");
+  let inputTwo = document.getElementsByClassName("record-input-two");
+  let inputThree = document.getElementsByClassName("record-input-three");
+  let inputsArr = []
+  let inputsArrTwo = []
+  let inputsArrThree = []
+  let labelArr = []
+  for(let input of inputs){
+    inputsArr.unshift(parseInt(input.innerHTML))
+  }
+  for(let input of inputTwo){
+    inputsArrTwo.unshift(parseInt(input.innerHTML))
+  }
+  for(let input of inputThree){
+    inputsArrThree.unshift(parseInt(input.innerHTML))
+  }
+  for(let i = 0; i < inputsArr.length; i++){
+    labelArr.push(i)
+  }
+  console.log(inputsArr)
+  //Geting Averages on Inputs
+  let inputOneTotal = inputsArr.reduce(function(a, b){
+    return a + b;
+  }, 0);
+  console.log(inputOneTotal)
+  let inputOneAverage = inputOneTotal / inputsArr.length
+  if (isNaN(inputOneAverage)){
+    document.getElementById("i1avg").innerHTML = "N/A"
+  } else {
+    document.getElementById("i1avg").innerHTML = Math.round(inputOneAverage * 10) / 10
+  }
+  let inputTwoTotal = inputsArrTwo.reduce(function(a, b){
+    return a + b;
+  }, 0);
+  console.log(inputTwoTotal)
+  let inputTwoAverage = inputTwoTotal / inputsArrTwo.length
+  if (isNaN(inputOneAverage)){
+    document.getElementById("i2avg").innerHTML = "N/A"
+  } else{
+    document.getElementById("i2avg").innerHTML = Math.round(inputTwoAverage * 10) / 10
+  }
+  let inputThreeTotal = inputsArrThree.reduce(function(a, b){
+    return a + b;
+  }, 0);
+  console.log(inputThreeTotal)
+  let inputThreeAverage = inputThreeTotal / inputsArrThree.length
+  if (isNaN(inputOneAverage)){
+    document.getElementById("i3avg").innerHTML = "N/A"
+  } else{
+    document.getElementById("i3avg").innerHTML = Math.round(inputThreeAverage * 10) / 10
+  }
+var chart = new Chart(ctx, {
+type: 'line',
+data: {
+  labels: labelArr,
+  datasets: [{
+      label: label,
+      data: inputsArr,
+      backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+      ],
+      borderColor: [
+          'rgba(255,99,132,1)',
+      ],
+      borderWidth: 2
+  },{
+      label: labelTwo,
+      data: inputsArrTwo,
+      backgroundColor: [
+          'rgba(155, 99, 272, 0.2)',
+      ],
+      borderColor: [
+          'rgba(100,99,232,1)',
+      ],
+      borderWidth: 2
+  },{
+      label: labelThree,
+      data: inputsArrThree,
+      backgroundColor: [
+          'rgba(60, 260, 70, 0.2)',
+      ],
+      borderColor: [
+          'rgba(50,50,60,1)',
+      ],
+      borderWidth: 2
+  }
+]
+},
+options: {
+  scales: {
+      yAxes: [{
+          ticks: {
+              beginAtZero:true
+          }
+      }]
+  }
+}
+});
+</script>
 {% endblock %}

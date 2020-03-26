@@ -38,7 +38,6 @@ def trackers_detail(request, tracker_id):
     record_form = RecordForm()
     arr = [tracker.label1, tracker.label2, tracker.label3]
     form_list = zip(record_form, arr)
-    print(type(form_list))
     return render(request, 'trackers/detail.html', {
          'tracker': tracker, 'record_form': record_form, 'arr': arr, 'form_list': form_list,
          })
