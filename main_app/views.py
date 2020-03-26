@@ -3,16 +3,18 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import TemplateView
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.forms.models import model_to_dict
+from django import forms
 from .forms import SearchForm, SymptomsForm, PatientForm, RecordForm
 from .models import Search, Symptoms, Patient, Tracker
-# import infermedica_api
+import infermedica_api
 
-# infermedica_api.configure(app_id='dd7d8ffc', app_key='805d0529637017534b6b5726f942c5b9')
+infermedica_api.configure(app_id='dd7d8ffc', app_key='805d0529637017534b6b5726f942c5b9')
 
 class TrackerCreate(LoginRequiredMixin, CreateView):
   model = Tracker
@@ -27,9 +29,9 @@ class TrackerDelete(LoginRequiredMixin, DeleteView):
   model = Tracker
   success_url = '/trackers/'
 
-# def trackers_index(request):
-#   trackers = Tracker.objects.all()
-#   return render(request, 'trackers/index.html', { 'trackers': trackers })
+class SymptomsDelete(LoginRequiredMixin, DeleteView):
+    model = Symptoms
+    success_url = '/patients/lookup/'
 
 def trackers_detail(request, tracker_id):
     tracker = Tracker.objects.get(id=tracker_id)
@@ -132,14 +134,15 @@ class PatientAssessment(TemplateView):
         symptoms        = Symptoms.objects.filter(user_id = request.user)
         arr             = []
         conditions      = []
-        # api             = infermedica_api.get_api()
-        # request         = infermedica_api.Diagnosis(sex='female', age=35)
-        # request.add_symptom('{s.s_id}', 'present', initial=True)
-        # request         = api.diagnosis(request)
-        print(request)
+        api             = infermedica_api.get_api()
+        call            = infermedica_api.Diagnosis(sex='female', age=35)
         for s in symptoms:
+            call.add_symptom(s.s_id, 'present', initial=True)
             arr.append(s.s_id)
-        context = {'arr': arr, 'symptoms': symptoms}
+        call            = api.diagnosis(call)
+        conditions.append(call.conditions)
+        print(conditions)
+        context = {'arr': arr, 'symptoms': symptoms, 'conditions': conditions}
         return render(request, self.template_name, context)       
 
 def home(request):
@@ -158,4 +161,11 @@ def signup(request):
     form = UserCreationForm()
     context = {'form': form, 'error_message': error_message}
     return render(request, 'registration/signup.html', context)
+
+def login_success(request):
+    if Patient.objects.filter(user_id = request.user).exists():
+            return redirect('lookup')
+    else:
+        form = PatientForm()
+        return render(request, 'patients/index.html', {'form': form})
 

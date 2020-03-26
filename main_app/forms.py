@@ -4,12 +4,12 @@ from .models import Search, Symptoms, Patient, Record
 
 class RecordForm(ModelForm):
   class Meta:
-    model = Record
-    fields = ['input1', 'input2', 'input3']
+    model           = Record
+    fields          = ['input1', 'input2', 'input3']
 
 class SearchForm(forms.ModelForm):
-    query       = forms.CharField(widget=forms.TextInput(
-        attrs   = {'class': 'form-control', 'placeholder': 'Please enter a symptom'}
+    query           = forms.CharField(widget=forms.TextInput(
+        attrs       = {'class': 'form-control', 'placeholder': 'Please enter a symptom'}
     ))
     class Meta:
         model       = Search

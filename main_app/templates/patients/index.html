@@ -1,8 +1,35 @@
 {% extends 'base.html' %}
 {% block content %}
-    <form action="{% url 'patients'  %}" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <button type="submit" class="btn btn-dark">Continue</button>
-    </form>
+{% load crispy_forms_tags %}
+
+<div class="container register">
+    <div class="row">
+        <div class="col-md-3 register-left">
+            <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt=""/>
+            <h3>Welcome</h3>
+            <p>You are just a few steps away from getting better</p>
+            <a href="{% url 'home'  %}" class="btn btn-light">About</a>
+        </div>
+        <div class="col-md-9 register-right">
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <h3 class="register-heading">Signup for our AI checker and recovery process</h3>
+                    <div class="row register-form">
+                        <div class="col-md-6">
+                            <form action="{% url 'patients'  %}" method="post">
+                                {% csrf_token %}
+                                {{ form|crispy}}
+                                <input type="submit" class="btnRegister"  value="Continue"/>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Add content to right of form -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 {% endblock %}

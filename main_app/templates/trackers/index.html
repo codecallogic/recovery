@@ -16,6 +16,15 @@
               <input type="submit" value="Diagnosis" class="btn btn-light">
           </form>
       </div>
+      <div class="col-6">
+          {% for i in conditions %}
+            {% for name in i %}
+            <p>{{ name.common_name }}</p>
+            <p>{{ name.name }}</p>
+            <p>{{ name.probability}}</p>
+            {% endfor %}
+          {% endfor %}
+      </div>
   </div>
 </div>
 

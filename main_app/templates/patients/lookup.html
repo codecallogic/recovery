@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
+<div class="container-fluid" style="background-image: url(https://images.unsplash.com/photo-1492321936769-b49830bc1d1e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60);">
+    <div class="row">
+    <div class="col-2"></div>
+    <div class="col-10">
+    <div class="container mt-5" style="background-color: white; min-height:90vmin; border-radius: 3vmin; padding:2vmin;">
+    <div class="container mt-5">
     <form action="{% url 'lookup' %}" method="POST">
         {% csrf_token %}
         <div class="form-group">
@@ -11,35 +17,49 @@
             </div>
         </div>
     </form>
-    <div class="container">
+    </div>
+    <div class="container mt-5">
         <div class="row">
-        {% for search in search %}
-            
-                <div class="col-12">
-                <form action="{% url 'patients_symptoms' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="s_id" value="{{ search.id }}">
-                    <input type="hidden" name="label" value="{{ search.label }}">
-                    <button type="submit" class="btn btn-dark">{{ search.label }}</button>
-                </form>
+        <div class="col-7">
+        {% if search %}
+            <h3 class="side-title">Select a category</h3>
+            {% for search in search %}
+                <div class="single category">
+                    <form action="{% url 'patients_symptoms' %}" method="POST">
+                    <ul class="list-unstyled">
+                        <li><a href="" title=""><span class="pull-right">
+                        {% csrf_token %}
+                        <input type="hidden" name="s_id" value="{{ search.id }}">
+                        <input type="hidden" name="label" value="{{ search.label }}">
+                        <input type="submit" class="btn pull-right" value="{{ search.label }}">
+                        </span></a>
+                        </li>
+                    </ul>
+                    </form>
                 </div>
-
-        {% endfor %}
-        </div>
-    </div>  
-    <div class="container">
-        <div class="row">
-        {% for symptom in symptoms %}
-            <div class="col-12">
-                <button class="btn btn-primary mt-3">{{ symptom.label }}</button>
-            </div>
-        {% endfor %}
-        {% if symptoms %}
-            <a href="{% url 'patients_assessment'  %}" class="btn btn-light mt-3">Continue</a>
+            {% endfor %}
         {% else %}
-            <p>I have no symptoms</p>
-            <a href="{% url 'patients_assessment'  %}" class="btn btn-light mt-3">Continue</a>
+            <p style="font-style: italic;">No new symptoms have been found</p>
         {% endif %}
         </div>
-    </div> 
+        <div class="col-5">
+            {% if symptoms %}
+            <h3 class="side-title mb-5">Ready for diagnosis</h3>
+                {% for symptom in symptoms %}
+                    <ul class="symptomsLabel">
+                        <a href="{% url 'symptoms_delete' symptom.id %}"><li class="symptoms listLabel"><span class="spanLabel"><i class="fa fa-trash"></i></span>{{ symptom.label }}</li></a>
+                    </ul>
+                {% endfor %}
+            <a href="{% url 'patients_assessment'  %}" class="btn btn-dark w-100 mt-5">Continue</a>
+            {% else %}
+                <p style="font-style: italic;">If you have no symptoms please continue</p>
+                <a href="{% url 'patients_assessment'  %}" class="btn btn-dark mt-5">Continue</a>
+            {% endif %}
+        </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>   
+</div> 
 {% endblock %}
