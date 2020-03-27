@@ -8,6 +8,7 @@ When a user logs in, they are able to select symptoms and receive possible diagn
 
 <img src="/images/addsymptoms.png">
 
+<img src="/images/diagnosis.png">
 
 <b>TECHNOLOGIES USED:</b> Python, Django, JavaScript, HTML, CSS, Bootstrap, Chart.JS
 
