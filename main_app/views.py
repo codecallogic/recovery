@@ -162,6 +162,7 @@ class PatientAssessment(LoginRequiredMixin, TemplateView):
                 name['probability'] *= 100
                 name['probability'] = round(name['probability'], 2)
         context = {'arr': arr, 'symptoms': symptoms, 'conditions': conditions, 'trackers': trackers}
+
         return render(request, self.template_name, context)       
 
 def home(request):
