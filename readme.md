@@ -4,9 +4,10 @@ A medical, health, and wellness app built with patient recovery process in mind.
 
 When a user logs in, they are able to select symptoms and receive possible diagnoses. With a diagnosis, they are able to create customized trackers to monitor things such as symptom ratings, nutrition intake, weight, exercise, or anything else they would like. This is done by adding numeric values which are then presented to the user via a line graph.
 
-<img src="https://imgur.com/oTOXc0q">
+<img src="/images/landing.png">
 
-<img src="https://imgur.com/RkEzvLd">
+<img src="/images/addsymptoms.png">
+
 
 <b>TECHNOLOGIES USED:</b> Python, Django, JavaScript, HTML, CSS, Bootstrap, Chart.JS
 
