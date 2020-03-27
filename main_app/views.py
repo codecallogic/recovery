@@ -34,10 +34,10 @@ class SymptomsDelete(LoginRequiredMixin, DeleteView):
     success_url = '/patients/lookup/'
 
 def trackers_detail(request, tracker_id):
-    tracker = Tracker.objects.get(id=tracker_id)
-    record_form = RecordForm()
-    arr = [tracker.label1, tracker.label2, tracker.label3]
-    form_list = zip(record_form, arr)
+    tracker             = Tracker.objects.get(id=tracker_id)
+    record_form         = RecordForm()
+    arr                 = [tracker.label1, tracker.label2, tracker.label3]
+    form_list           = zip(record_form, arr)
     return render(request, 'trackers/detail.html', {
          'tracker': tracker, 'record_form': record_form, 'arr': arr, 'form_list': form_list,
          })

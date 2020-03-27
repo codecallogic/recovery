@@ -8,6 +8,20 @@ body{
     background-color: #A89387;
 }
 
+#id_input1, #id_input2, #id_input3{
+    width:100%;
+    margin: 3vmin 1vmin;
+    padding:1vmin;
+    border-top:none;
+    border-right:none;
+    border-left:none;
+}
+
+.btn-add {
+    background-color: #173793!important;
+    color: white;
+}
+
 .navbar {
     height:10vmin!important;
     background-color: rgba(38, 38, 40, .4)!important;
@@ -313,4 +327,12 @@ li:nth-child(2n) {
 
 .alert {
     margin-bottom: 100px!important;
+}
+
+.table-records {
+    background-color: #0F3599!important;
+}
+
+.table-records th {
+    color:white;
 }
