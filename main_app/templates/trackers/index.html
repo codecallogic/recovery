@@ -1,16 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Diagnosis</h1>
+<h1 class="display-4" style="padding:2vmin; font-weight:200;">Diagnosis</h1>
 
-<div class="container">
+<div class="container-fluid">
   <div class="row">
       <div class="col-6">
-          {% for symptom in symptoms %}
+          {% if symptoms %}
+          <table class="table">
+            <thead class="thead-dark">
+              <th>Symptom</th>
+            </thead>
+            {% for symptom in symptoms %}
+            <tr>
+              <td>{{ symptom.label }}</td>
+            </tr>
+            {% endfor %}
+          </table>
+          {% endif %}
+          
           <div class="col-12">
               <button class="btn btn-primary mt-3">{{ symptom.label }}</button>
           </div>
-          {% endfor %}
+          
           <form action="{% url 'patients_assessment'  %}" method="post">
               {% csrf_token %}
               <input type="submit" value="Diagnosis" class="btn btn-light">
