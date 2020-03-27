@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="container mt-5">
+  {% if object %}
+  <h1>Edit <span class="teal-text">{{object.tracker_name}}</span></h1>
+  {% else %}
+  <h1>Add Tracker</h1>
+  {% endif %}
+  <form action="" method="post">
+    {% csrf_token %}
+    <table>
+      {{ form|crispy}}
+    </table>
+    <input type="submit" value="Update!" class="btn btn-add w-100">
+  </form>
+</div>
+{% endblock %}

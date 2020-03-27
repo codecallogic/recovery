@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1 class="display-4 text-center mt-5">{{ tracker.tracker_name }}</h1>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-6 mt-3" style="padding:5vmin;">
+      <div class="row">
+        <form action="{% url 'add_record' tracker.id %}" method="post">
+          {% csrf_token %}
+          {% for field, label in form_list %}
+            {{ field.errors }}
+            {{ label }}
+            {{ field }}
+            {% if field.help_text %}
+            <p class="help">{{ field.help_text|safe }}</p>
+          {% endif %}
+          {% endfor %}
+          <input type="submit" class="btn btn-add mt-3 w-100 mb-3" value="Add">
+        </form>
+      </div>
+      <div class="row">
+        <table class="table table-striped">
+          <thead>
+              <tr>
+                <th>Tracking</th>
+                <th>Average</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td>{{ tracker.label1 }}</td>
+                <td id="i1avg"></td>
+              </tr>
+              <tr>
+                <td>{{ tracker.label2 }}</td>
+                <td id="i2avg"></td>
+              </tr>
+              <tr>
+                <td>{{ tracker.label3 }}</td>
+                <td id="i3avg"></td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row">
+      <table class="table table-striped">
+        <thead class="table-records">
+            <tr>
+              <th>Date</th>
+              <th>Timestamp</th>
+              <th id="label1">{{ tracker.label1 }}</th>
+              <th id="label2">{{ tracker.label2 }}</th>
+              <th id="label3">{{ tracker.label3 }}</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for record in tracker.record_set.all %}
+            <tr>
+              <td>{{record.datestamp}}</td>
+              <td>{{record.timestamp}}</td>
+              <td class="record-input">{{record.input1}}</td>
+              <td class="record-input-two">{{record.input2}}</td>
+              <td class="record-input-three">{{record.input3}}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <div class="col-6">
+      <canvas id="chart1" width="100" height="100"></canvas>
+    </div>
+  </div>  
+</div>
+<script>
+  let label = document.getElementById("label1").innerHTML
+  let labelTwo = document.getElementById("label2").innerHTML
+  let labelThree = document.getElementById("label3").innerHTML
+  let ctx = document.getElementById("chart1");
+  let inputs = document.getElementsByClassName("record-input");
+  let inputTwo = document.getElementsByClassName("record-input-two");
+  let inputThree = document.getElementsByClassName("record-input-three");
+  let inputsArr = []
+  let inputsArrTwo = []
+  let inputsArrThree = []
+  let labelArr = []
+  for(let input of inputs){
+    inputsArr.unshift(parseInt(input.innerHTML))
+  }
+  for(let input of inputTwo){
+    inputsArrTwo.unshift(parseInt(input.innerHTML))
+  }
+  for(let input of inputThree){
+    inputsArrThree.unshift(parseInt(input.innerHTML))
+  }
+  for(let i = 0; i < inputsArr.length; i++){
+    labelArr.push(i)
+  }
+  console.log(inputsArr)
+  //Geting Averages on Inputs
+  let inputOneTotal = inputsArr.reduce(function(a, b){
+    return a + b;
+  }, 0);
+  console.log(inputOneTotal)
+  let inputOneAverage = inputOneTotal / inputsArr.length
+  if (isNaN(inputOneAverage)){
+    document.getElementById("i1avg").innerHTML = "N/A"
+  } else {
+    document.getElementById("i1avg").innerHTML = Math.round(inputOneAverage * 10) / 10
+  }
+  let inputTwoTotal = inputsArrTwo.reduce(function(a, b){
+    return a + b;
+  }, 0);
+  console.log(inputTwoTotal)
+  let inputTwoAverage = inputTwoTotal / inputsArrTwo.length
+  if (isNaN(inputOneAverage)){
+    document.getElementById("i2avg").innerHTML = "N/A"
+  } else{
+    document.getElementById("i2avg").innerHTML = Math.round(inputTwoAverage * 10) / 10
+  }
+  let inputThreeTotal = inputsArrThree.reduce(function(a, b){
+    return a + b;
+  }, 0);
+  console.log(inputThreeTotal)
+  let inputThreeAverage = inputThreeTotal / inputsArrThree.length
+  if (isNaN(inputOneAverage)){
+    document.getElementById("i3avg").innerHTML = "N/A"
+  } else{
+    document.getElementById("i3avg").innerHTML = Math.round(inputThreeAverage * 10) / 10
+  }
+var chart = new Chart(ctx, {
+type: 'line',
+data: {
+  labels: labelArr,
+  datasets: [{
+      label: label,
+      data: inputsArr,
+      backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+      ],
+      borderColor: [
+          'rgba(255,99,132,1)',
+      ],
+      borderWidth: 2
+  },{
+      label: labelTwo,
+      data: inputsArrTwo,
+      backgroundColor: [
+          'rgba(155, 99, 272, 0.2)',
+      ],
+      borderColor: [
+          'rgba(100,99,232,1)',
+      ],
+      borderWidth: 2
+  },{
+      label: labelThree,
+      data: inputsArrThree,
+      backgroundColor: [
+          'rgba(60, 260, 70, 0.2)',
+      ],
+      borderColor: [
+          'rgba(50,50,60,1)',
+      ],
+      borderWidth: 2
+  }
+]
+},
+options: {
+  scales: {
+      yAxes: [{
+          ticks: {
+              beginAtZero:true
+          }
+      }]
+  }
+}
+});
+</script>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="sidenav">
+  <div class="login-main-text">
+     <h2>Application<br> Login Page</h2>
+     <p>Login or register from here to access.</p>
+  </div>
+</div>
+<div class="main">
+  <div class="col-md-6 col-sm-12">
+     <div class="login-form">
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}  
+        {{ form|crispy }}
+        <input type="submit" class="form-control btn btn.light" value="login">
+        <input type="hidden" name="next" value="{{ next }}">
+        <a href="{% url 'signup'  %}" class="form-control btn btn-secondary">Register</a>
+      </form>
+     </div>
+  </div>
+</div>
+
+{% endblock %}
