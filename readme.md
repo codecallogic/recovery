@@ -13,7 +13,7 @@ When a user logs in, they are able to select symptoms and receive possible diagn
 
 ## GETTING STARTED
 
-[<b>HEROKU</b>](https://heroku.com)
+[<b>HEROKU</b>](https://recovery-tracker-app.herokuapp.com/)
 <br>
 [<b>TRELLO</b>](https://trello.com/b/uG9P0yHg/recovery)
 <br>

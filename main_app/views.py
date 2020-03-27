@@ -140,8 +140,8 @@ class PatientAssessment(TemplateView):
             arr.append(s.s_id)
         call            = api.diagnosis(call)
         conditions.append(call.conditions)
-        print(conditions)
         context = {'arr': arr, 'symptoms': symptoms, 'conditions': conditions}
+        print(context)
         return render(request, self.template_name, context)       
 
 def home(request):
