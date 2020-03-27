@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+    <h1 class="display-4 text-center mt-4 mb-5" style="padding:2vmin; font-weight:100;">Add Tracker</h1>  
+    <div class="container mt-5">
+    <form action="{% url 'trackers_create'  %}" method="post">
+        {% csrf_token %}
+        {{ form|crispy}}
+    <input type="submit" value="Add" class="btn btn-add w-100">
+    </form>
+    </div>
+{% endblock %}

@@ -22,6 +22,11 @@ body{
     color: white;
 }
 
+.thead-symptoms {
+    background-color: #1A3994!important;
+    color:white;
+}
+
 .navbar {
     height:10vmin!important;
     background-color: rgba(38, 38, 40, .4)!important;
@@ -335,4 +340,167 @@ li:nth-child(2n) {
 
 .table-records th {
     color:white;
+}
+
+.our-team-main
+{
+	width:100%;
+	height:auto;
+	border-bottom:5px #1D398E solid;
+	background:#fff;
+	text-align:center;
+	border-radius:10px;
+	overflow:hidden;
+	position:relative;
+	transition:0.5s;
+	margin-bottom:28px;
+}
+
+
+.our-team-main img
+{
+	border-radius:50%;
+	margin-bottom:20px;
+    width: 90px;
+}
+
+.our-team-main h3
+{
+	font-size:20px;
+	font-weight:700;
+}
+
+.our-team-main p
+{
+	margin-bottom:0;
+}
+
+.team-back
+{
+	width:100%;
+	height:auto;
+	position:absolute;
+	top:0;
+	left:0;
+	padding:5px 15px 0 15px;
+	text-align:left;
+	background:#fff;
+	
+}
+
+.team-front
+{
+	width:100%;
+	height:auto;
+	position:relative;
+	z-index:10;
+	background:#fff;
+	padding:15px;
+	bottom:0px;
+	transition: all 0.5s ease;
+}
+
+.our-team-main:hover .team-front
+{
+	bottom:-200px;
+	transition: all 0.5s ease;
+}
+
+.our-team-main:hover
+{
+	border-color:#777;
+	transition:0.5s;
+}
+
+.mt-60{
+    margin-top:60px;
+}
+
+.section-block-grey {
+    padding: 90px 0px 90px 0px;
+    background-color: #f9f9f9;
+}
+
+.serv-section-2 {
+    position: relative;
+    border: 1px solid #eee;
+    background: #fff;
+    box-shadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.16);
+    border-radius: 5px;
+    overflow: hidden;
+    padding: 30px;
+}
+
+.serv-section-2:before {
+    position: absolute;
+    top: 0;
+    right: 0px;
+    z-index: 0;
+    content: " ";
+    width: 120px;
+    height: 120px;
+    background: #f5f5f5;
+    border-bottom-left-radius: 136px;
+    transition: all 0.4s ease-in-out;
+    -webkit-transition: all 0.4s ease-in-out;
+}
+
+.serv-section-2-icon {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    max-width: 100px;
+    z-index: 1;
+    text-align: center;
+}
+
+.serv-section-2-icon i {
+    color: #1D398E;
+    font-size: 48px;
+    line-height: 65px;
+    transition: all 0.4s ease-in-out;
+    -webkit-transition: all 0.4s ease-in-out;
+}
+
+.serv-section-desc {
+    position: relative;
+}
+
+.serv-section-2 h4 {
+    color: #333;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.serv-section-2 h5 {
+    color: #333;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1;
+    margin-top: 5px;
+}
+
+.section-heading-line-left {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 3px;
+    background: #1D398E;
+    border-radius: 25%;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.serv-section-2 p {
+    margin-top: 25px;
+    padding-right: 50px;
+}
+
+.serv-section-2:hover .serv-section-2-icon i {
+    color: #fff;
+}
+
+.serv-section-2:hover:before {
+    background: #1D398E;
 }

@@ -12,6 +12,15 @@ console.log('SLIDE!');
 $('#slider4').on('slid.bs.carousel', function () {
 console.log('SLID!');
 });
+
+let add = document.querySelector('.add')
+
+add.addEventListener('keyup'), function(e){
+    if(e.keyCode === 13){
+        event.preventDefault();
+        add.click();
+    }
+}
   
 $(document).ready(function(){
 

@@ -1,47 +1,104 @@
 {% extends 'base.html' %}
 {% block content %}
-
-<h1>Diagnosis</h1>
-
-<div class="container">
+{% if symptoms %}
+<h1 class="display-4 text-center mt-4 mb-5" style="padding:2vmin; font-weight:100;">Diagnosis</h1>
+{% endif %}
+<div class="container-fluid">
   <div class="row">
       <div class="col-6">
-          {% for symptom in symptoms %}
-          <div class="col-12">
-              <button class="btn btn-primary mt-3">{{ symptom.label }}</button>
-          </div>
-          {% endfor %}
+          {% if symptoms %}
+          <table class="table">
+            <thead class="thead-symptoms">
+              <th>Symptoms</th>
+            </thead>
+            {% for symptom in symptoms %}
+            <tr>
+              <td>{{ symptom.label }}</td>
+            </tr>
+            {% endfor %}
+          </table>
           <form action="{% url 'patients_assessment'  %}" method="post">
-              {% csrf_token %}
-              <input type="submit" value="Diagnosis" class="btn btn-light">
+            {% csrf_token %}
+            <div style="display: flex;">
+            <a href="{% url 'lookup'  %}"><input value="Edit Symptoms" class="btn btn-dark w-100 mt-3"></a>
+            <input type="submit" value="Get diagnosis" class="btn btn-add w-100 mt-3">
+            </div>
           </form>
+          {% else %}
+          
+            <!-- if no symptoms -->
+
+          {% endif %}
       </div>
       <div class="col-6">
+        <div class="container">
+        <div class="row">
           {% for i in conditions %}
             {% for name in i %}
+          <div class="col-lg-4">
+          <div class="our-team-main">
+          
+          <div class="team-front">
+          <img src="/static/images/recovery-logo.png" class="img-fluid" />
+              <h3>{{ name.name }}</h3>
+              <p>{{ name.common_name }}</p>
+          </div>
+          
+          <div class="team-back">
+          <span>
+                The probality of this condition is {{ name.probability }} %
+          </span>
+          </div>
+          </div>
+          </div>
             <p>{{ name.common_name }}</p>
             <p>{{ name.name }}</p>
             <p>{{ name.probability }}</p>
             {% endfor %}
           {% endfor %}
+        </div>
+        </div>
       </div>
   </div>
 </div>
 
-<h1>Trackers</h1>
+{% if trackers %}
 
+<h1 class="display-4 text-center mt-4 mb-5" style="padding:2vmin; font-weight:100;">Trackers</h1>
+
+<div class="container">
+<div class="section-heading center-holder">
+  <h3>Doing it at the right time will help you recover</h3>
+  <div class="section-heading-line"></div>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+  <br>incididunt ut labore et dolore magna aliqua.</p>
+</div>
+</div>
+
+{% endif %}
+
+<div class="section-block-grey">
+  <div class="container-fluid" style="padding:4vmin;">
+    <div class="row mt-60">
 {% for tracker in trackers %}
-  <div class="card">
-    <a href="{% url 'detail' tracker.id %}">
-    <div class="card-content">
-      <span class="card-title">{{ tracker.tracker_name }}</span>
-      <div class="card-action">
-        <a href="{% url 'trackers_update' tracker.id %}">Edit</a>
-        <a href="{% url 'trackers_delete' tracker.id %}">Delete</a>
-      </div>
-    </div>
-    </a>
-  </div>
-{% endfor %}
 
+<div class="col-md-4 col-sm-12 col-12">
+      <div class="serv-section-2 serv-section-2-act">
+          <div class="serv-section-2-icon serv-section-2-icon-act"> <i class="far fa-clock"></i> </div>
+          <div class="serv-section-desc">
+              <a href="{% url 'detail' tracker.id %}"></a><h4>{{ tracker.tracker_name }}</h4></a>
+              <h5>Keep track of it </h5> 
+          </div>
+
+          <div class="section-heading-line-left">
+            <a href="{% url 'trackers_update' tracker.id %}" class="mt-5">Edit</a>
+            <a href="{% url 'trackers_delete' tracker.id %}" class="mt-5">Delete</a>
+          </div>
+        
+      </div>
+</div>
+{% endfor %}
+  </div>
+  </div>
+</div>
 {% endblock %}

@@ -12,7 +12,7 @@
             <div class="input-group">
             {{ form.query }}
                 <div class="input-group-append">
-                    <button type="submit" class="btn btn-dark">Add</button>
+                    <button type="submit" class="btn btn-dark add">Add</button>
                 </div>
             </div>
         </div>
@@ -44,7 +44,8 @@
         </div>
         <div class="col-5">
             {% if symptoms %}
-            <h3 class="side-title mb-5">Ready for diagnosis</h3>
+            <h3 class="side-title mb-3">Ready for diagnosis</h3>
+            <small class="text-muted mb-5"> Hover over text to delete symptom</small>
                 {% for symptom in symptoms %}
                     <ul class="symptomsLabel">
                         <a href="{% url 'symptoms_delete' symptom.id %}"><li class="symptoms listLabel"><span class="spanLabel"><i class="fa fa-trash"></i></span>{{ symptom.label }}</li></a>
