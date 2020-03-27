@@ -7,6 +7,7 @@ class Tracker(models.Model):
     label1          = models.CharField(max_length=100)
     label2          = models.CharField(max_length=100)
     label3          = models.CharField(max_length=100)
+    user            = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.tracker_name
@@ -18,6 +19,7 @@ class Record(models.Model):
     input1          = models.IntegerField()
     input2          = models.IntegerField()
     input3          = models.IntegerField()
+    datestamp       = models.DateField(auto_now_add=True)
     timestamp       = models.TimeField(auto_now_add=True)
     tracker         = models.ForeignKey(Tracker, on_delete=models.CASCADE)
 
@@ -25,7 +27,7 @@ class Record(models.Model):
         return self.input1, self.input2, self.input3
 
     class Meta:
-        ordering = ['-timestamp']
+        ordering = ['-datestamp', '-timestamp']
 
 class Search(models.Model):
     query       = models.CharField(max_length=100)
@@ -56,6 +58,6 @@ class Patient(models.Model):
         unique_together = ('firstname', 'lastname', 'age', 'sex')   
 
     def __str__(self):
-        return f"Patient {self.firstname} {self.lastname} of age {self.age}, gender {self.sex} is submitted a form "
+        return f"Patient {self.firstname} {self.lastname} of age {self.age}, sex {self.sex} is submitted a form "
 
     

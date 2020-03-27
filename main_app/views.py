@@ -10,28 +10,42 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.forms.models import model_to_dict
 from django import forms
-from .forms import SearchForm, SymptomsForm, PatientForm, RecordForm
+from .forms import SearchForm, SymptomsForm, PatientForm, RecordForm, TrackerForm
 from .models import Search, Symptoms, Patient, Tracker
 import infermedica_api
 
 infermedica_api.configure(app_id='dd7d8ffc', app_key='805d0529637017534b6b5726f942c5b9')
 
-class TrackerCreate(LoginRequiredMixin, CreateView):
-  model = Tracker
-  fields = '__all__'
-  success_url = '/trackers/'
-
 class TrackerUpdate(LoginRequiredMixin, UpdateView):
-  model = Tracker
-  fields = '__all__'
+    model = Tracker
+    fields = ['tracker_name', 'label1', 'label2', 'label3']
 
 class TrackerDelete(LoginRequiredMixin, DeleteView):
-  model = Tracker
-  success_url = '/trackers/'
+    model = Tracker
+    success_url = '/trackers/'
 
 class SymptomsDelete(LoginRequiredMixin, DeleteView):
     model = Symptoms
     success_url = '/patients/lookup/'
+
+class TrackerCreate(LoginRequiredMixin, TemplateView):
+    template_name = 'trackers/create.html'
+
+    def get(self, request):
+        form            = TrackerForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = TrackerForm(request.POST or None)
+        print(form)
+        if form.is_valid():
+            new_tracker             = form.save(commit=False)
+            new_tracker.user_id     = request.user.id
+            new_tracker.save()
+        else:
+            print('false')
+        return redirect('patients_assessment')
+        
 
 def trackers_detail(request, tracker_id):
     tracker             = Tracker.objects.get(id=tracker_id)
@@ -39,8 +53,8 @@ def trackers_detail(request, tracker_id):
     arr                 = [tracker.label1, tracker.label2, tracker.label3]
     form_list           = zip(record_form, arr)
     return render(request, 'trackers/detail.html', {
-         'tracker': tracker, 'record_form': record_form, 'arr': arr, 'form_list': form_list,
-         })
+            'tracker': tracker, 'record_form': record_form, 'arr': arr, 'form_list': form_list,
+            })
 
 def add_record(request, tracker_id):
     form = RecordForm(request.POST)
@@ -50,7 +64,7 @@ def add_record(request, tracker_id):
         new_record.save()
     return redirect('detail', tracker_id=tracker_id)
 
-class SearchView(TemplateView):
+class SearchView(LoginRequiredMixin, TemplateView):
     template_name = 'patients/lookup.html'
 
     def get(self, request):
@@ -97,7 +111,7 @@ class PatientInfo(LoginRequiredMixin, TemplateView):
         return redirect('lookup')   
         
 
-class PatientSymptoms(TemplateView):
+class PatientSymptoms(LoginRequiredMixin, TemplateView):
     template_name = 'patients/lookup.html'
 
     def get(self, request):
@@ -120,7 +134,7 @@ class PatientSymptoms(TemplateView):
         context = {'form': form, 'symptoms': symptoms}
         return render(request, self.template_name, context)
 
-class PatientAssessment(TemplateView):
+class PatientAssessment(LoginRequiredMixin, TemplateView):
     template_name = 'trackers/index.html'
 
     def get(self, request):
@@ -131,17 +145,23 @@ class PatientAssessment(TemplateView):
 
     def post(self, request): 
         symptoms        = Symptoms.objects.filter(user_id = request.user)
+        patient         = Patient.objects.filter(user_id = request.user)
+        trackers        = Tracker.objects.all()
+        patient_age     = patient[0]
         arr             = []
         conditions      = []
         api             = infermedica_api.get_api()
-        call            = infermedica_api.Diagnosis(sex='female', age=35)
+        call            = infermedica_api.Diagnosis(sex=patient_age.sex.lower(), age=patient_age.age)
         for s in symptoms:
             call.add_symptom(s.s_id, 'present', initial=True)
             arr.append(s.s_id)
         call            = api.diagnosis(call)
         conditions.append(call.conditions)
-        print(conditions)
-        context = {'arr': arr, 'symptoms': symptoms, 'conditions': conditions}
+        for i in conditions:
+            for name in i:
+                name['probability'] *= 100
+                name['probability'] = round(name['probability'], 2)
+        context = {'arr': arr, 'symptoms': symptoms, 'conditions': conditions, 'trackers': trackers}
         return render(request, self.template_name, context)       
 
 def home(request):
