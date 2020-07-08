@@ -146,7 +146,7 @@ class PatientAssessment(LoginRequiredMixin, TemplateView):
     def post(self, request): 
         symptoms        = Symptoms.objects.filter(user_id = request.user)
         patient         = Patient.objects.filter(user_id = request.user)
-        trackers        = Tracker.objects.all()
+        trackers        = Tracker.objects.filter(user_id = request.user)
         patient_age     = patient[0]
         arr             = []
         conditions      = []

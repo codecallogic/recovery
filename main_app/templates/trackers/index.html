@@ -83,6 +83,9 @@
 <div class="section-block-grey">
   <div class="container-fluid" style="padding:4vmin;">
     <div class="row mt-60">
+    
+
+{% if trackers %}
 {% for tracker in trackers %}
 
 <div class="col-md-4 col-sm-12 col-12">
@@ -100,6 +103,22 @@
       </div>
 </div>
 {% endfor %}
+
+{% else %}
+
+
+<h1 class="display-4 text-center mt-4 mb-5" style="margin-left: 2em; padding:2vmin; font-weight:100;">Trackers</h1>
+
+<div class="container">
+<div class="section-heading center-holder">
+  <h3>You have not created any trackers</h3>
+  <div class="section-heading-line"></div>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+  <br>incididunt ut labore et dolore magna aliqua.</p>
+</div>
+</div>
+
+{% endif %}
   </div>
   </div>
 </div>
