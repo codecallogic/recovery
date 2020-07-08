@@ -26,7 +26,13 @@
           </form>
           {% else %}
           
-            <!-- if no symptoms -->
+          <div class="container">
+            <div class="row">
+              <div class="submit-wrapper">
+                 <a href="#">GET IN TOUCH</a>   
+              </div>
+            </div>
+          </div>
 
           {% endif %}
       </div>
@@ -91,7 +97,6 @@
             <a href="{% url 'trackers_update' tracker.id %}" class="mt-5">Edit</a>
             <a href="{% url 'trackers_delete' tracker.id %}" class="mt-5">Delete</a>
           </div>
-        
       </div>
 </div>
 {% endfor %}
